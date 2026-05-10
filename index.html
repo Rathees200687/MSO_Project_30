@@ -1,27 +1,150 @@
-<script>
-  const button = document.getElementById("startButton");
-  const overlay = document.getElementById("overlay");
-  const player = document.getElementById("youtubePlayer");
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  async function startExperience() {
-    try {
+  <title>Video Experience</title>
 
-      // Vollbild starten
-      if (document.documentElement.requestFullscreen) {
-        await document.documentElement.requestFullscreen();
-      }
-
-      // YouTube Video starten
-      player.src =
-        "https://youtu.be/KIVsYbgHndk";
-
-      // Overlay entfernen
-      overlay.style.display = "none";
-
-    } catch (error) {
-      console.log(error);
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  }
 
-  button.addEventListener("click", startExperience);
-</script>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+      font-family: Arial, sans-serif;
+    }
+
+    #container {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 10;
+      padding: 24px;
+      transition: opacity 0.4s ease;
+    }
+
+    .content {
+      max-width: 700px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 7vw, 72px);
+      margin-bottom: 18px;
+      line-height: 1.1;
+    }
+
+    p {
+      font-size: 18px;
+      opacity: 0.85;
+      margin-bottom: 36px;
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: 22px;
+      padding: 18px 36px;
+      border-radius: 999px;
+      border: none;
+      background: white;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="container">
+
+    <iframe
+      id="youtubePlayer"
+      src=""
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+  </div>
+
+  <div id="overlay">
+    <div class="content">
+
+      <h1>Ein Moment, der bleibt.</h1>
+
+      <p>
+        Tippe, um das Video im Vollbildmodus zu starten.
+      </p>
+
+      <button id="startButton">
+        ▶ Video ansehen
+      </button>
+
+    </div>
+  </div>
+
+  <script>
+    const button = document.getElementById("startButton");
+    const overlay = document.getElementById("overlay");
+    const player = document.getElementById("youtubePlayer");
+
+    async function startExperience() {
+
+      try {
+
+        // Vollbildmodus starten
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
+
+        // YouTube Video laden & automatisch starten
+        player.src =
+          "https://www.youtube.com/embed/KIVsYbgHndk?autoplay=1&mute=0&controls=0&playsinline=1&rel=0";
+
+        // Overlay ausblenden
+        overlay.style.opacity = "0";
+
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 400);
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    button.addEventListener("click", startExperience);
+  </script>
+
+</body>
+</html>
