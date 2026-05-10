@@ -1,1 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video</title>
 
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    video {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      background: #000;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 10;
+      padding: 24px;
+    }
+
+    button {
+      font-size: 22px;
+      padding: 18px 34px;
+      border-radius: 999px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <video id="video" src="/video.mp4" playsinline preload="auto"></video>
+
+  <div id="overlay">
+    <div>
+      <h1>Ein Moment, der bleibt.</h1>
+      <p>Tippe, um das Video mit Ton im Vollbildmodus zu starten.</p>
+      <button id="startButton">▶ Video starten</button>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById("video");
+    const overlay = document.getElementById("overlay");
+    const startButton = document.getElementById("startButton");
+
+    async function startVideo() {
+      try {
+        video.muted = false;
+        video.volume = 1;
+
+        if (document.documentElement.requestFullscreen) {
+          await document.documentElement.requestFullscreen();
+        }
+
+        await video.play();
+        overlay.style.display = "none";
+      } catch (error) {
+        console.log("Start wurde blockiert:", error);
+      }
+    }
+
+    startButton.addEventListener("click", startVideo);
+
+    window.addEventListener("load", async () => {
+      try {
+        video.muted = false;
+        video.volume = 1;
+        await video.play();
+        overlay.style.display = "none";
+      } catch (error) {
+        overlay.style.display = "flex";
+      }
+    });
+  </script>
+</body>
+</html>
