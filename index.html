@@ -49,7 +49,10 @@
 </head>
 
 <body>
-  <video id="video" src="/video.mp4" playsinline preload="auto"></video>
+  <video id="video" playsinline preload="metadata">
+    <source src="./MSO Projekt.3gp" type="video/3gpp">
+    <p>Dein Browser unterstützt dieses Videoformat nicht.</p>
+  </video>
 
   <div id="overlay">
     <div>
@@ -66,17 +69,24 @@
 
     async function startVideo() {
       try {
+        // Erst mit Mute starten
+        video.muted = true;
+        await video.play();
+        
+        // Sound einschalten nach erfolgreichem Play
         video.muted = false;
         video.volume = 1;
 
+        // Fullscreen anfordern
         if (document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
+          await document.documentElement.requestFullscreen().catch(err => {
+            console.log("Fullscreen nicht möglich:", err);
+          });
         }
 
-        await video.play();
         overlay.style.display = "none";
       } catch (error) {
-        console.log("Start wurde blockiert:", error);
+        console.error("Fehler beim Videostart:", error);
       }
     }
 
@@ -84,11 +94,12 @@
 
     window.addEventListener("load", async () => {
       try {
-        video.muted = false;
+        video.muted = true;
         video.volume = 1;
         await video.play();
         overlay.style.display = "none";
       } catch (error) {
+        console.log("Autoplay nicht unterstützt (normal):", error);
         overlay.style.display = "flex";
       }
     });
