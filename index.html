@@ -2,9 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Video Experience</title>
 
   <style>
@@ -28,14 +26,14 @@
       inset: 0;
       width: 100vw;
       height: 100dvh;
-      object-fit: cover;
+      object-fit: contain;
       background: black;
     }
 
     #overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
+      background: black;
       color: white;
       display: flex;
       align-items: center;
@@ -43,7 +41,6 @@
       text-align: center;
       z-index: 10;
       padding: 24px;
-      transition: opacity 0.4s ease;
     }
 
     .content {
@@ -80,7 +77,7 @@
 
   <video
     id="video"
-    playsinline
+    controls
     preload="auto">
 
     <source
@@ -90,17 +87,15 @@
 
   <div id="overlay">
     <div class="content">
-
       <h1>Ein Moment, der bleibt.</h1>
 
       <p>
-        Tippe, um das Video mit Ton im Vollbildmodus zu starten.
+        Tippe auf Play. Danach kannst du das Handy ins Querformat drehen.
       </p>
 
       <button id="startButton">
         ▶ Video ansehen
       </button>
-
     </div>
   </div>
 
@@ -109,34 +104,18 @@
     const overlay = document.getElementById("overlay");
 
     async function startExperience() {
-
       try {
-
-        // Querformat anfragen
-        if (screen.orientation && screen.orientation.lock) {
-          try {
-            await screen.orientation.lock("landscape");
-          } catch (e) {}
-        }
-
-        // Vollbildmodus
-        if (document.documentElement.requestFullscreen) {
-          await document.documentElement.requestFullscreen();
-        }
-
-        // Ton aktivieren
         video.muted = false;
         video.volume = 1;
 
-        // Video starten
         await video.play();
 
-        // Overlay ausblenden
-        overlay.style.opacity = "0";
+        overlay.style.display = "none";
 
-        setTimeout(() => {
-          overlay.style.display = "none";
-        }, 400);
+        // iPhone/Safari: nativen Video-Vollbildmodus versuchen
+        if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        }
 
       } catch (error) {
         console.log(error);
